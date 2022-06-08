@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Fetch Manager examples</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" media="screen" href="main.css">
+</head>
+<body>
+  <noscript>
+    You need to enable JavaScript to run this app.
+  </noscript>
+  <div id="root">
+      <h1>Fetch Manager Examples</h1>
+      <p>This page shows an examples of how the Fetch manager can be utilized.</p>
+  </div>
+  
+
+  <div id="examples">
+    <section>
+      <h2>Example 1. Simplest fetch</h2>
+      <script>
+        document.addEventListener("DOMContentLoaded",function(){
+          const fetchManager = new window.fetchmanager.default();
+          fetchManager.Fetch({ "url": "/demo/data.json" }).then((result) => {
+            console.log('Simple fetch result:', result);
+            document.getElementById('exampletarget1').innerHTML = JSON.stringify(result);
+          });
+        });	
+      </script>
+      <pre>
+        <code>
+          fetchManager.Fetch({ "url": "/demo/data.json" }).then((result) => {
+            console.log('Simple fetch result:', result);
+          });
+        </code>
+      </pre>
+      <pre id="exampletarget1" class="exampletarget" >
+      </pre>
+    </section>
+  </div>
+
+  <script src="../build/index.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
