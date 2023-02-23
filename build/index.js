@@ -1,6 +1,6 @@
 /*!
  * 
- *   @wezz/fetchmanager v0.0.1
+ *   @wezz/fetchmanager v0.0.2
  *   https://github.com/wezz/FetchManager
  *
  *   Copyright (c) Wezz Balk (https://github.com/wezz)
