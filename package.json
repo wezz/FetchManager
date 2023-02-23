@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "A script that improves a javascript fetch requests with request throttling, managing querystring parameters and delayed request start",
   "main": "build/index.js",
+  "types": "build/FetchManagerTypes.d.ts",
   "scripts": {
     "build": "webpack",
     "test": "jest",
@@ -34,18 +35,17 @@
     "file-loader": "^6.1.1",
     "http-server": "^0.12.3",
     "jest": "^26.6.1",
-    "prettier": "^2.1.2",
-    "prettier-webpack-plugin": "^1.2.0",
     "style-loader": "^2.0.0",
     "terser-webpack-plugin": "^5.0.1",
     "ts-jest": "^26.4.2",
-    "ts-loader": "^8.0.7",
-    "typescript": "^4.0.3",
+    "ts-loader": "^9.4.2",
+    "typescript": "4.9.5",
     "url-loader": "^4.1.1",
-    "webpack": "^5.2.0",
-    "webpack-cli": "^4.1.0"
+    "webpack": "^5.75.0",
+    "webpack-cli": "^4.1.0",
+    "copy-webpack-plugin": "^9.1.0"
   },
   "dependencies": {
-    "@wezz/store-manager": "^0.0.10"
+    "@wezz/store-manager": "^0.0.13"
   }
 }

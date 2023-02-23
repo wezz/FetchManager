@@ -1,8 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
-const PrettierPlugin = require("prettier-webpack-plugin");
 const TerserPlugin = require('terser-webpack-plugin');
 const getPackageJson = require('./scripts/getPackageJson');
+const CopyPlugin = require("copy-webpack-plugin");
 
 const {
   version,
@@ -22,6 +22,7 @@ const banner = `
   LICENSE file in the root directory of this source tree.
 `;
 
+
 module.exports = {
   mode: "production",
   devtool: 'source-map',
@@ -29,11 +30,14 @@ module.exports = {
   output: {
     filename: 'index.js',
     path: path.resolve(__dirname, 'build'),
-    library: 'fetchmanager',
-    libraryTarget: 'umd'
+    globalObject: 'typeof global !== \'undefined\' ? global : this',
+    library: {
+      name: 'fetchmanager',
+      type: 'umd',
+    },
   },
   optimization: {
-    minimize: true,
+    minimize: false,
     minimizer: [new TerserPlugin({
       extractComments: false
     })],
@@ -41,9 +45,8 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
+        test: /\.ts?$/,
         loader: 'ts-loader',
-        exclude: /node_modules/,
       },
       {
         test: /\.css$/i,
@@ -56,8 +59,12 @@ module.exports = {
     ]
   },
   plugins: [
-    new PrettierPlugin(),
-    new webpack.BannerPlugin(banner)
+    new CopyPlugin({
+      patterns: [
+        { from: path.resolve(__dirname, "src"), to: path.resolve(__dirname, "build") }
+      ],
+    }),
+    new webpack.BannerPlugin(banner),
   ],
   resolve: {
       extensions: [".tsx", ".ts", ".js"]
