@@ -30,6 +30,8 @@ When doing a fetch request you should define a options object that looks like th
     "fetchoptions": null
 }
 ```
+*Note that the option fetchoptions is passed down directly to fetch.*<br/>
+[Click here for the fetch options documentation](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#supplying_request_options)
 
 ### Key
 If a key is set then the "signal" will be stored and if another request is being sent with an identical key, the current request will be aborted.

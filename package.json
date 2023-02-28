@@ -1,13 +1,22 @@
 {
   "name": "@wezz/fetchmanager",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "A script that improves a javascript fetch requests with request throttling, managing querystring parameters and delayed request start",
-  "main": "build/index.js",
-  "types": "build/FetchManagerTypes.d.ts",
+  "main": "./dist/fetchmanager.umd.cjs",
+  "module": "./dist/fetchmanager.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/fetchmanager.js",
+      "require": "./dist/fetchmanager.umd.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "webpack",
-    "test": "jest",
-    "demo": "http-server -p 8118 -o /demo/index.html  -c-1",
+    "dev": "vite",
+    "build": "tsc && vite build",
     "prepare": "npm run build",
     "pack": "npm run build",
     "trypublish": "npm publish --access public || true"
@@ -28,24 +37,12 @@
     "request"
   ],
   "devDependencies": {
-    "@types/jest": "^26.0.15",
-    "@types/node": "^14.14.2",
-    "css-loader": "^5.0.0",
-    "eslint": "^7.12.0",
-    "file-loader": "^6.1.1",
-    "http-server": "^0.12.3",
-    "jest": "^26.6.1",
-    "style-loader": "^2.0.0",
-    "terser-webpack-plugin": "^5.0.1",
-    "ts-jest": "^26.4.2",
-    "ts-loader": "^9.4.2",
-    "typescript": "4.9.5",
-    "url-loader": "^4.1.1",
-    "webpack": "^5.75.0",
-    "webpack-cli": "^4.1.0",
-    "copy-webpack-plugin": "^9.1.0"
+    "@types/node": "^18.14.2",
+    "typescript": "^4.9.3",
+    "vite": "^4.1.4",
+    "vite-plugin-dts": "^2.0.2"
   },
   "dependencies": {
-    "@wezz/store-manager": "^0.0.13"
+    "@wezz/store-manager": "^0.1.2"
   }
 }

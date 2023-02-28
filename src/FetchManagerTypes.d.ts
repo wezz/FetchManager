@@ -1,12 +1,4 @@
-﻿export default class FetchManager {
-  constructor();
-  ObjToQueryString(params: object): string;
-  Fetch(options: IFetchManagerOption): Promise<any|null>;
-  GetScript(url: string) : Promise<void>;
-  CompileUrl(options: IFetchManagerOption): string;
-  KeyFromOptions(options: IFetchManagerOption): string;
-}
-
+﻿
 export interface FetchManagerClass {
   constructor();
   ObjToQueryString(params: object): string;
@@ -26,7 +18,7 @@ export interface IFetchManagerRequestObject {
   cache: IFetchManagerCacheOption;
   result?: any;
   promise?: any;
-  abortcontroller?: any;
+  abortcontroller?: AbortController | Undefined;
   delaytimer?: number | null;
 }
 
@@ -37,6 +29,7 @@ export interface IFetchManagerOption {
   requestdelay?: number;
   cache?: boolean | IFetchManagerCacheOption;
   fetchoptions?: RequestInit;
+  signal?: AbortController.signal;
 }
 
 export interface IFetchManagerCacheOption {
