@@ -124,7 +124,41 @@
       </pre>
       <pre id="exampletarget3" class="exampletarget"></pre>
     </section>
-    
+    <section>
+      <h2>Example 4. Request with parsed querystring object</h2>
+      <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+          const fetchManager = new window.fetchmanager();
+          const response = await fetchManager.Fetch({ 
+            "url": "/data.json",
+            "querystring": {
+              "numbervar": 123,
+              "boolvar": true,
+              "stringvar": "stringcontent",
+              "arrayvar":["foo", "bar"]
+            }
+          });
+          const result = await response.json();
+          console.log('Fetch with parsed querystrings:', response);
+          document.getElementById('exampletarget4').innerHTML += "Requested url:\n" + response.url + "\n\n";
+          document.getElementById('exampletarget4').innerHTML += "Result:\n" + JSON.stringify(result);
+        });
+      </script>
+      <pre>
+<code>
+  const response = await fetchManager.Fetch({ 
+    "url": "/data.json",
+    "querystring": {
+      "numbervar": 123,
+      "boolvar": true,
+      "stringvar": "stringcontent"
+    }
+  });
+  const result = await response.json();
+</code>
+      </pre>
+      <pre id="exampletarget4" class="exampletarget"></pre>
+    </section>
   </div>
 
 </body>
