@@ -1,7 +1,7 @@
 var f = Object.defineProperty;
-var d = (o, e, t) => e in o ? f(o, e, { enumerable: !0, configurable: !0, writable: !0, value: t }) : o[e] = t;
-var l = (o, e, t) => (d(o, typeof e != "symbol" ? e + "" : e, t), t);
-var y = Object.defineProperty, g = (o, e, t) => e in o ? y(o, e, { enumerable: !0, configurable: !0, writable: !0, value: t }) : o[e] = t, p = (o, e, t) => (g(o, typeof e != "symbol" ? e + "" : e, t), t);
+var d = (o, e, r) => e in o ? f(o, e, { enumerable: !0, configurable: !0, writable: !0, value: r }) : o[e] = r;
+var i = (o, e, r) => (d(o, typeof e != "symbol" ? e + "" : e, r), r);
+var y = Object.defineProperty, g = (o, e, r) => e in o ? y(o, e, { enumerable: !0, configurable: !0, writable: !0, value: r }) : o[e] = r, p = (o, e, r) => (g(o, typeof e != "symbol" ? e + "" : e, r), r);
 class m {
   constructor(e = "cache") {
     p(this, "prefix"), this.prefix = e;
@@ -13,51 +13,53 @@ class m {
     return typeof this.Get(`${this.prefix}-${e}`) < "u";
   }
   Get(e) {
-    const t = this.getStorageMedium(!1), r = this.getStorageMedium(!0);
-    let c = !1, n = null;
-    if (t && r) {
+    const r = this.getStorageMedium(!1), t = this.getStorageMedium(!0);
+    let n = !1, c = null;
+    if (r && t) {
       try {
-        n = t.getItem(`${this.prefix}-${e}`), n = this.toJSONIfJSON(n), c = n !== null;
+        c = r.getItem(`${this.prefix}-${e}`), c = this.toJSONIfJSON(c), n = c !== null;
       } catch {
       }
-      if (!c)
+      if (!n)
         try {
-          n = r.getItem(`${this.prefix}-${e}`), n = this.toJSONIfJSON(n), c = n !== null;
+          c = t.getItem(`${this.prefix}-${e}`), c = this.toJSONIfJSON(c), n = c !== null;
         } catch {
         }
     }
-    return n;
+    return c;
   }
   toJSONIfJSON(e) {
     return typeof e == "string" && (e.indexOf("{") === 0 || e.indexOf("[") === 0) && (e = JSON.parse(e)), e;
   }
-  Save(e, t, r = !0) {
-    console.warn("StoreManager.Save is deprecated"), this.Set(e, t, r);
+  Save(e, r, t = !0) {
+    console.warn("StoreManager.Save is deprecated"), this.Set(e, r, t);
   }
-  Set(e, t, r = !0) {
-    const c = this.getStorageMedium(r);
-    let n = !1;
-    if (c) {
-      typeof t == "object" && (t = JSON.stringify(t));
+  Set(e, r, t = !0) {
+    const n = this.getStorageMedium(t);
+    let c = !1;
+    if (n) {
+      typeof r == "object" && (r = JSON.stringify(r));
       try {
-        c.setItem(`${this.prefix}-${e}`, t), n = !0;
-      } catch (i) {
-        console.error("Unable to save object", i);
+        n.setItem(`${this.prefix}-${e}`, r), c = !0;
+      } catch (l) {
+        console.error("Unable to save object", l);
       }
     }
-    return n;
+    return c;
   }
   Remove(e) {
-    const t = this.getStorageMedium(!0), r = this.getStorageMedium(!1);
-    t && t.removeItem(`${this.prefix}-${e}`), r && r.removeItem(`${this.prefix}-${e}`);
+    const r = this.getStorageMedium(!0), t = this.getStorageMedium(!1);
+    r && r.removeItem(`${this.prefix}-${e}`), t && t.removeItem(`${this.prefix}-${e}`);
   }
 }
 const u = new m("fetchmanager");
-class O {
+class S {
   constructor() {
-    l(this, "moduleName", "FetchManager");
-    l(this, "requests", {});
-    l(this, "defaultFetchOptions", {
+    i(this, "moduleName", "FetchManager");
+    //private requests: { [key: string]: IFetchManagerRequestObject } = {};
+    i(this, "requestStore", {});
+    // private requestStore = { [key: string]: IFetchManagerRequestObject } = {};
+    i(this, "defaultFetchOptions", {
       method: "GET",
       // *GET, POST, PUT, DELETE, etc.
       mode: "cors",
@@ -66,66 +68,82 @@ class O {
         "Content-Type": "application/json"
       }
     });
+    this.setStoreReference();
+  }
+  setStoreReference() {
+  }
+  getRequest(e) {
+    return this.requestStore[e];
+  }
+  setRequest(e) {
+    this.requestStore[e.key] = e;
+  }
+  hasRequest(e) {
+    return !(typeof this.requestStore[e] > "u");
   }
   ObjToQueryString(e) {
-    return typeof e != "object" ? "" : Object.keys(e).map((t) => {
-      if (Array.isArray(e[t])) {
-        for (var r = [], c = 0; c < e[t].length; c++)
-          r.push(
-            `${encodeURIComponent(t)}=${encodeURIComponent(e[t][c])}`
+    return typeof e != "object" ? "" : Object.keys(e).map((r) => {
+      if (Array.isArray(e[r])) {
+        for (var t = [], n = 0; n < e[r].length; n++)
+          t.push(
+            `${encodeURIComponent(r)}=${encodeURIComponent(e[r][n])}`
           );
-        return r.join("&");
+        return t.join("&");
       }
-      return encodeURIComponent(t) + "=" + encodeURIComponent(e[t]);
+      return encodeURIComponent(r) + "=" + encodeURIComponent(e[r]);
     }).join("&");
   }
   async Fetch(e) {
     if (!e.url)
       return console.error("Need a url to do a request"), null;
-    const t = this.getKey(e), r = this.getRequestObj(t, e);
-    let c = this.parseFetchOptions(e);
-    return r.active && e.url !== r.url && typeof window.AbortController < "u" && r.abortcontroller && typeof r.abortcontroller.abort == "function" && (r.abortcontroller.abort(), r.abortcontroller = new AbortController(), r.active = !1), e.url !== r.url ? (typeof r.abortcontroller < "u" && r.abortcontroller && typeof r.abortcontroller.signal < "u" && (e.signal = r.abortcontroller.signal), r.url = this.CompileUrl(e), r.active = !0, r.promise = new Promise(async (n, i) => {
+    const r = this.getKey(e), t = this.getRequestObj(r, e);
+    let n = this.parseFetchOptions(e);
+    return t.active && e.url !== t.url && typeof window.AbortController < "u" && t.abortcontroller && typeof t.abortcontroller.abort == "function" && (t.abortcontroller.abort(), t.abortcontroller = new AbortController(), t.active = !1), e.url !== t.url ? (typeof t.abortcontroller < "u" && t.abortcontroller && typeof t.abortcontroller.signal < "u" && (e.signal = t.abortcontroller.signal), t.url = this.CompileUrl(e), t.active = !0, t.promise = new Promise(async (c, l) => {
       const h = typeof e.requestdelay == "number" ? e.requestdelay : 0;
-      r.delaytimer !== null && (window.clearTimeout(r.delaytimer), r.delaytimer = null), r.delaytimer = window.setTimeout(async () => {
+      t.delaytimer !== null && (window.clearTimeout(t.delaytimer), t.delaytimer = null), t.delaytimer = window.setTimeout(async () => {
         try {
-          let s = !r.cache.usecache, a = null;
-          r.cache.usecache && (a = this.getResponseFromCache(r), a == null && (s = !0)), s && (a = await fetch(r.url, c)), r.active = !1, s && c.headers && c.headers["Content-Type"] && c.headers["Content-Type"].indexOf("json") ? r.result = await a.json() : r.result = a, r.finished = !0, this.saveResponseToCache(r), n(r.result);
+          let s = !t.cache.usecache, a = null;
+          t.cache.usecache && (a = this.getResponseFromCache(t), a == null && (s = !0)), s && (a = await fetch(t.url, n)), t.active = !1, t.result = await a, t.finished = !0, this.saveResponseToCache(t), c(t.result);
         } catch (s) {
-          r.active = !1, console.error(s), i(r);
+          t.active = !1, console.error(s), l(t);
         }
       }, h);
-    }), r.promise) : r.finished && r.result !== null ? new Promise(async (n) => {
-      n(r.result);
-    }) : r.promise && r.active ? r.promise : null;
+    }), t.promise) : t.finished && t.result !== null ? new Promise(async (c) => {
+      c(t.result);
+    }) : t.promise && t.active ? t.promise : null;
   }
   GetScript(e) {
-    return new Promise((r, c) => {
-      const n = document.createElement("script");
-      document.body.appendChild(n), n.onload = r, n.onerror = c, n.async = !0, n.src = e;
+    return new Promise((t, n) => {
+      const c = document.createElement("script");
+      document.body.appendChild(c), c.onload = t, c.onerror = n, c.async = !0, c.src = e;
     });
   }
   CompileUrl(e) {
-    let t = e.url;
-    const r = typeof e.querystring == "string" ? e.querystring : this.ObjToQueryString(e.querystring);
-    return t += (t.indexOf("?") === -1 ? "?" : "") + r, t;
+    let r = e.url;
+    const t = typeof e.querystring == "string" ? e.querystring : this.ObjToQueryString(e.querystring);
+    return r += (r.indexOf("?") === -1 ? "?" : "") + t, r;
   }
-  getRequestObj(e, t) {
-    return typeof this.requests[e] > "u" && (this.requests[e] = {
-      key: e,
-      url: "",
-      cache: this.getRequestCacheOptions(t),
-      options: t,
-      active: !1,
-      finished: !1,
-      result: null,
-      promise: null,
-      abortcontroller: typeof window.AbortController == "function" ? new AbortController() : null,
-      delaytimer: null
-    }), this.requests[e];
+  getRequestObj(e, r) {
+    if (!this.hasRequest(e)) {
+      const t = {
+        key: e,
+        url: "",
+        cache: this.getRequestCacheOptions(r),
+        options: r,
+        active: !1,
+        finished: !1,
+        result: null,
+        promise: null,
+        abortcontroller: typeof window.AbortController == "function" ? new AbortController() : null,
+        delaytimer: null
+      };
+      this.setRequest(t);
+    }
+    return this.getRequest(e);
   }
   getResponseFromCache(e) {
-    const t = u.Get(e.cache.cachekey);
-    return this.validResponse(t) ? t : null;
+    const r = u.Get(e.cache.cachekey);
+    return this.validResponse(r) ? r : null;
   }
   validResponse(e) {
     return e != null && (typeof e == "string" || typeof e == "object" && Object.keys(e).length > 0 || typeof e == "object" && typeof e.length == "number");
@@ -150,11 +168,11 @@ class O {
     }
   }
   parseFetchOptions(e) {
-    let t = typeof e.fetchoptions < "u" ? e.fetchoptions : {};
-    return t = {
+    let r = typeof e.fetchoptions < "u" ? e.fetchoptions : {};
+    return r = {
       ...this.defaultFetchOptions,
-      ...t
-    }, t;
+      ...r
+    }, r;
   }
   getRequestCacheOptions(e) {
     return {
@@ -171,13 +189,13 @@ class O {
     return e.key ? e.key : this.KeyFromOptions(e);
   }
   KeyFromOptions(e) {
-    const t = this.CompileUrl(e);
-    return t.substring(
+    const r = this.CompileUrl(e);
+    return r.substring(
       0,
-      t.indexOf("?") > 0 ? t.indexOf("?") : t.length
+      r.indexOf("?") > 0 ? r.indexOf("?") : r.length
     );
   }
 }
 export {
-  O as FetchManager
+  S as FetchManager
 };

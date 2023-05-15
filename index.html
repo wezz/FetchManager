@@ -56,26 +56,75 @@
     <section>
       <h2>Example 1. Simplest fetch</h2>
       <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", async () => {
           const fetchManager = new window.fetchmanager();
-          fetchManager.Fetch({
-            "url": "/data.json"
-          }).then((result) => {
-            console.log('Simple fetch result:', result);
-            document.getElementById('exampletarget1').innerHTML = JSON.stringify(result);
-          });
+          const response = await fetchManager.Fetch({ "url": "/data.json" });
+          const result = await response.json();
+          console.log('Simple fetch result:', result);
+          document.getElementById('exampletarget1').innerHTML = "Result:\n" + JSON.stringify(result);
         });
       </script>
       <pre>
-        <code>
-          fetchManager.Fetch({ "url": "/data.json" }).then((result) => {
-            console.log('Simple fetch result:', result);
-          });
-        </code>
+<code>
+  const response = await fetchManager.Fetch({ "url": "/data.json" });
+  const result = await response.json();
+</code>
       </pre>
-      <pre id="exampletarget1" class="exampletarget">
-      </pre>
+      <pre id="exampletarget1" class="exampletarget"></pre>
     </section>
+
+    <section>
+      <h2>Example 2. Delay fetch request with 2 seconds</h2>
+      <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+          document.getElementById('exampletarget2').innerHTML += "Init: " + (new Date()).toISOString() + "\n";
+          const fetchManager = new window.fetchmanager();
+          document.getElementById('exampletarget2').innerHTML += "Fetch command initiated: " + (new Date()).toISOString() + "\n";
+          const response = await fetchManager.Fetch({ "url": "/data.json", "requestdelay": 2000 });
+          const result = await response.json();
+          
+          console.log('Simple fetch result:', result);
+          document.getElementById('exampletarget2').innerHTML += "Fetch response: " + (new Date()).toISOString() + "\n";
+          document.getElementById('exampletarget2').innerHTML += "Result:\n" + JSON.stringify(result);
+          
+        });
+      </script>
+      <pre>
+<code>
+  const response = await fetchManager.Fetch({ "url": "/data.json", "requestdelay": 2000 });
+  const result = await response.json();
+</code>
+      </pre>
+      <pre id="exampletarget2" class="exampletarget"></pre>
+    </section>
+    <section>
+      <h2>Example 3. Debounced fetch (automatic abort)</h2>
+      <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+          const fetchManager = new window.fetchmanager();
+          let response = await fetchManager.Fetch({ "url": "/data.json", "key":"example3request" });
+          response = await fetchManager.Fetch({ "url": "/data.json", "key":"example3request" });
+          const result = await response.json();
+          document.getElementById('exampletarget3').innerHTML = "Result:\n" + JSON.stringify(result);
+        });
+
+        document.addEventListener("DOMContentLoaded", async () => {
+          const fetchManager = new window.fetchmanager();
+          let response = await fetchManager.Fetch({ "url": "/data.json", "key":"example3request" });
+          response = await fetchManager.Fetch({ "url": "/data.json", "key":"example3request" });
+          const result = await response.json();
+          document.getElementById('exampletarget3').innerHTML = "Result:\n" + JSON.stringify(result);
+        });
+      </script>
+      <pre>
+<code>
+  const response = await fetchManager.Fetch({ "url": "/data.json" });
+  const result = await response.json();
+</code>
+      </pre>
+      <pre id="exampletarget3" class="exampletarget"></pre>
+    </section>
+    
   </div>
 
 </body>

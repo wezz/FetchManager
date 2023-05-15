@@ -17,11 +17,11 @@ fetchManager
 	}
 });
 */
-import {
-	StoreManager
-} from "@wezz/store-manager";
+import { StoreManager } from "@wezz/store-manager";
+import { WindowReferenceStore } from "@wezz/window-reference-store";
 
 const storeManager = new StoreManager("fetchmanager");
+const windowReferenceStore = new WindowReferenceStore("fetchmanager");
 import {
 	IFetchManagerRequestObject,
 	IFetchManagerOption,
@@ -30,7 +30,7 @@ import {
 ("use strict");
 export default class FetchManager {
 	public moduleName = "FetchManager";
-	private requests: { [key: string]: IFetchManagerRequestObject } = {};
+	private requestStore = windowReferenceStore;
 	private defaultFetchOptions: RequestInit = {
 		method: "GET", // *GET, POST, PUT, DELETE, etc.
 		mode: "cors", // no-cors, cors, *same-origin
@@ -38,7 +38,9 @@ export default class FetchManager {
 			"Content-Type": "application/json",
 		},
 	};
-	constructor() {}
+	constructor() {
+		
+	}
 
 	public ObjToQueryString(params: any) {
 		if (typeof params !== "object") {
@@ -115,16 +117,7 @@ export default class FetchManager {
 							response = await fetch(reqobj.url, fetchoptions);
 						}
 						reqobj.active = false;
-						if (
-							doFetchRequest &&
-							(fetchoptions["headers"] as any) &&
-							(fetchoptions["headers"] as any)["Content-Type"] &&
-							(fetchoptions["headers"] as any)["Content-Type"].indexOf("json")
-						) {
-							reqobj.result = await response.json();
-						} else {
-							reqobj.result = response;
-						}
+						reqobj.result = await response;
 						reqobj.finished = true;
 
 						this.saveResponseToCache(reqobj);
@@ -172,8 +165,8 @@ export default class FetchManager {
 	}
 
 	private getRequestObj(key: string, options: IFetchManagerOption) {
-		if (typeof this.requests[key] === "undefined") {
-			this.requests[key] = {
+		if (!this.requestStore.has(key)) {
+			const requestObj = {
 				key: key,
 				url: "",
 				cache: this.getRequestCacheOptions(options),
@@ -187,8 +180,9 @@ export default class FetchManager {
 					null,
 				delaytimer: null,
 			} as IFetchManagerRequestObject;
+			this.requestStore.set(key, requestObj);
 		}
-		return this.requests[key];
+		return this.requestStore.get(key);
 	}
 
 	private getResponseFromCache(reqobj: IFetchManagerRequestObject) {

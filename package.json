@@ -1,6 +1,6 @@
 {
   "name": "@wezz/fetchmanager",
-  "version": "0.1.3",
+  "version": "1.0.0",
   "description": "A script that improves a javascript fetch requests with request throttling, managing querystring parameters and delayed request start",
   "type": "module",
   "main": "./dist/fetchmanager.umd.cjs",
@@ -16,6 +16,7 @@
     "dist"
   ],
   "scripts": {
+    "start": "npm run dev",
     "dev": "vite",
     "build": "tsc && vite build",
     "prepare": "npm run build",
@@ -39,11 +40,12 @@
   ],
   "devDependencies": {
     "@types/node": "^18.14.2",
-    "typescript": "^4.9.3",
+    "typescript": "4.9.3",
     "vite": "^4.1.4",
     "vite-plugin-dts": "^2.0.2"
   },
   "dependencies": {
-    "@wezz/store-manager": "^0.1.2"
+    "@wezz/store-manager": "^0.1.2",
+    "@wezz/window-reference-store": "^0.1.3"
   }
 }

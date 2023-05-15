@@ -11,11 +11,12 @@ npm install @wezz/fetchmanager
 ## Usage
 ### Initialize Fetch Manager
 ```
-import fetchManager from "@wezz/fetchmanager";
+import { FetchManager } from '@wezz/fetchmanager';
 // On document ready
-fetchManager.Fetch({
+const response = fetchManager.Fetch({
     "url": "urlhere"
-})
+});
+const data = response.json();
 ```
 
 ## Options
