@@ -21,7 +21,7 @@ import { StoreManager } from "@wezz/store-manager";
 import { WindowReferenceStore } from "@wezz/window-reference-store";
 
 const storeManager = new StoreManager("fetchmanager");
-const windowReferenceStore = new WindowReferenceStore("fetchmanager");
+const windowReferenceStore = new WindowReferenceStore("requests", "fetchmanagerstore");
 import {
 	IFetchManagerRequestObject,
 	IFetchManagerOption,
@@ -39,7 +39,6 @@ export default class FetchManager {
 		},
 	};
 	constructor() {
-		
 	}
 
 	public ObjToQueryString(params: any) {
@@ -70,8 +69,8 @@ export default class FetchManager {
 		const key = this.getKey(options);
 		const reqobj = this.getRequestObj(key, options);
 		let fetchoptions = this.parseFetchOptions(options);
-
 		if (reqobj.active) {
+			
 			if (options.url !== reqobj.url) {
 				if (
 					typeof window["AbortController"] !== "undefined" &&
@@ -81,6 +80,7 @@ export default class FetchManager {
 					// console.info('Request was aborted', reqobj);
 					reqobj["abortcontroller"].abort();
 					reqobj["abortcontroller"] = new AbortController();
+					console.info('Previous request was cancelled', reqobj)
 					reqobj.active = false;
 				} else {
 					// console.warn('Browser doesn\'t support abort controller');
