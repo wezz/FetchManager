@@ -4,10 +4,6 @@ export default class FetchManager {
     private requestStore;
     private defaultFetchOptions;
     constructor();
-    private setStoreReference;
-    private getRequest;
-    private setRequest;
-    private hasRequest;
     ObjToQueryString(params: any): string;
     Fetch(options: IFetchManagerOption): Promise<any>;
     GetScript(url: string): Promise<unknown>;
@@ -21,4 +17,5 @@ export default class FetchManager {
     private getCacheKey;
     private getKey;
     KeyFromOptions(options: IFetchManagerOption): string;
+    private debug;
 }
