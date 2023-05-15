@@ -58,16 +58,14 @@
       <script>
         document.addEventListener("DOMContentLoaded", async () => {
           const fetchManager = new window.fetchmanager();
-          const response = await fetchManager.Fetch({ "url": "/data.json" });
-          const result = await response.json();
+          const result = await fetchManager.Fetch({ "url": "/data.json" });
           console.log('Simple fetch result:', result);
           document.getElementById('exampletarget1').innerHTML = "Result:\n" + JSON.stringify(result);
         });
       </script>
       <pre>
 <code>
-  const response = await fetchManager.Fetch({ "url": "/data.json" });
-  const result = await response.json();
+  const result = await fetchManager.Fetch({ "url": "/data.json" });
 </code>
       </pre>
       <pre id="exampletarget1" class="exampletarget"></pre>
@@ -81,7 +79,7 @@
           const fetchManager = new window.fetchmanager();
           document.getElementById('exampletarget2').innerHTML += "Fetch command initiated: " + (new Date()).toISOString() + "\n";
           const response = await fetchManager.Fetch({ "url": "/data.json", "requestdelay": 2000 });
-          const result = await response.json();
+          const result = await response;
           
           console.log('Simple fetch result:', result);
           document.getElementById('exampletarget2').innerHTML += "Fetch response: " + (new Date()).toISOString() + "\n";
@@ -91,8 +89,7 @@
       </script>
       <pre>
 <code>
-  const response = await fetchManager.Fetch({ "url": "/data.json", "requestdelay": 2000 });
-  const result = await response.json();
+  const result = await fetchManager.Fetch({ "url": "/data.json", "requestdelay": 2000 });
 </code>
       </pre>
       <pre id="exampletarget2" class="exampletarget"></pre>
@@ -103,23 +100,24 @@
         document.addEventListener("DOMContentLoaded", async () => {
           const fetchManager = new window.fetchmanager();
           let response = await fetchManager.Fetch({ "url": "/data.json", "key":"example3request" });
-          response = await fetchManager.Fetch({ "url": "/data.json", "key":"example3request" });
-          const result = await response.json();
+          result = await fetchManager.Fetch({ "url": "/data.json", "key":"example3request" });
           document.getElementById('exampletarget3').innerHTML = "Result:\n" + JSON.stringify(result);
         });
 
         document.addEventListener("DOMContentLoaded", async () => {
           const fetchManager = new window.fetchmanager();
-          let response = await fetchManager.Fetch({ "url": "/data.json", "key":"example3request" });
-          response = await fetchManager.Fetch({ "url": "/data.json", "key":"example3request" });
-          const result = await response.json();
-          document.getElementById('exampletarget3').innerHTML = "Result:\n" + JSON.stringify(result);
+          const response = await fetchManager.Fetch({ "url": "/data.json", "key":"example3request" });
+          const result = response;
+          const response2 = await fetchManager.Fetch({ "url": "/data.json", "key":"example3request" });
+          const result2 = response;
+          document.getElementById('exampletarget3').innerHTML += "Results: ";
+          document.getElementById('exampletarget3').innerHTML += "1: " + JSON.stringify(result);
+          document.getElementById('exampletarget3').innerHTML += "2: " + JSON.stringify(result2);
         });
       </script>
       <pre>
 <code>
-  const response = await fetchManager.Fetch({ "url": "/data.json" });
-  const result = await response.json();
+  const result = await fetchManager.Fetch({ "url": "/data.json" });
 </code>
       </pre>
       <pre id="exampletarget3" class="exampletarget"></pre>
@@ -130,31 +128,32 @@
         document.addEventListener("DOMContentLoaded", async () => {
           const fetchManager = new window.fetchmanager();
           const response = await fetchManager.Fetch({ 
+            "key":"example4",
             "url": "/data.json",
             "querystring": {
               "numbervar": 123,
               "boolvar": true,
               "stringvar": "stringcontent",
               "arrayvar":["foo", "bar"]
-            }
+            },
+            "returnrequest":true
           });
           const result = await response.json();
-          console.log('Fetch with parsed querystrings:', response);
           document.getElementById('exampletarget4').innerHTML += "Requested url:\n" + response.url + "\n\n";
           document.getElementById('exampletarget4').innerHTML += "Result:\n" + JSON.stringify(result);
         });
       </script>
       <pre>
 <code>
-  const response = await fetchManager.Fetch({ 
+  const result = await fetchManager.Fetch({ 
     "url": "/data.json",
     "querystring": {
       "numbervar": 123,
       "boolvar": true,
-      "stringvar": "stringcontent"
+      "stringvar": "stringcontent",
+      "arrayvar":["foo", "bar"]
     }
   });
-  const result = await response.json();
 </code>
       </pre>
       <pre id="exampletarget4" class="exampletarget"></pre>

@@ -45,20 +45,8 @@ export default class FetchManager {
 		if (typeof params !== "object") {
 			return "";
 		}
-		return Object.keys(params)
-			.map((key) => {
-				if (Array.isArray(params[key])) {
-					var splitParams = [];
-					for (var i = 0; i < params[key].length; i++) {
-						splitParams.push(
-							`${encodeURIComponent(key)}=${encodeURIComponent(params[key][i])}`
-						);
-					}
-					return splitParams.join("&");
-				}
-				return encodeURIComponent(key) + "=" + encodeURIComponent(params[key]);
-			})
-			.join("&");
+		const urlParams = new URLSearchParams(params);
+		return urlParams.toString();
 	}
 
 	public async Fetch(options: IFetchManagerOption) {
@@ -69,6 +57,7 @@ export default class FetchManager {
 		const key = this.getKey(options);
 		const reqobj = this.getRequestObj(key, options);
 		let fetchoptions = this.parseFetchOptions(options);
+		this.debug(reqobj.debug, 'Reqobj', reqobj)
 		if (reqobj.active) {
 			
 			if (options.url !== reqobj.url) {
@@ -81,6 +70,7 @@ export default class FetchManager {
 					reqobj["abortcontroller"].abort();
 					reqobj["abortcontroller"] = new AbortController();
 					console.info('Previous request was cancelled', reqobj)
+					this.debug(reqobj.debug, 'Previous request was cancelled', reqobj)
 					reqobj.active = false;
 				} else {
 					// console.warn('Browser doesn\'t support abort controller');
@@ -94,21 +84,25 @@ export default class FetchManager {
 				typeof reqobj["abortcontroller"]["signal"] !== "undefined") {
 				options["signal"] = reqobj["abortcontroller"]["signal"];
 			}
+			
 			reqobj.url = this.CompileUrl(options);
 			reqobj.active = true;
 			reqobj.promise = new Promise(async (resolve, reject) => {
+				
 				const delay =
 					typeof options.requestdelay === "number" ? options.requestdelay : 0;
 				if (reqobj.delaytimer !== null) {
 					window.clearTimeout(reqobj.delaytimer);
 					reqobj.delaytimer = null;
 				}
+				this.debug(reqobj.debug, 'Request will be delayed by ' + delay +'ms', reqobj);
 				reqobj.delaytimer = window.setTimeout(async () => {
 					try {
 						let doFetchRequest = !reqobj.cache.usecache;
 						let response = null;
 						if (reqobj.cache.usecache) {
 							response = this.getResponseFromCache(reqobj);
+							this.debug(reqobj.debug, 'Response from cache ', response);
 							if (response == null) {
 								doFetchRequest = true;
 							}
@@ -117,7 +111,17 @@ export default class FetchManager {
 							response = await fetch(reqobj.url, fetchoptions);
 						}
 						reqobj.active = false;
-						reqobj.result = await response;
+						const requestContentType = (((fetchoptions.headers ?? '' as any)["Content-Type"] ?? '') as string).toLocaleLowerCase();
+						this.debug(reqobj.debug, 'requestContentType ', requestContentType);
+						if (
+							reqobj.returnrequest === false &&
+							doFetchRequest &&
+							requestContentType.indexOf("json") !== -1
+						) {
+							reqobj.result = await response.json();
+						} else {
+							reqobj.result = response;
+						}
 						reqobj.finished = true;
 
 						this.saveResponseToCache(reqobj);
@@ -158,15 +162,15 @@ export default class FetchManager {
 		let url = options.url;
 		const querystring =
 			typeof options.querystring === "string" ?
-			options.querystring :
+			(options.querystring+'') :
 			this.ObjToQueryString(options.querystring);
-		url += (url.indexOf("?") === -1 ? "?" : "") + querystring;
+		url += (options.querystring && url.indexOf("?") === -1 ? "?" : "") + querystring;
 		return url;
 	}
 
 	private getRequestObj(key: string, options: IFetchManagerOption) {
 		if (!this.requestStore.has(key)) {
-			const requestObj = {
+			const requestObj : IFetchManagerRequestObject= {
 				key: key,
 				url: "",
 				cache: this.getRequestCacheOptions(options),
@@ -179,7 +183,9 @@ export default class FetchManager {
 					new AbortController() :
 					null,
 				delaytimer: null,
-			} as IFetchManagerRequestObject;
+				returnrequest: (options?.returnrequest ?? false),
+				debug: (options?.debug ?? false)
+			};
 			this.requestStore.set(key, requestObj);
 		}
 		return this.requestStore.get(key);
@@ -207,6 +213,7 @@ export default class FetchManager {
 			return false;
 		}
 		let goodResult = this.validResponse(reqobj.result);
+		this.debug(reqobj.debug, 'Storing response in cache ', reqobj.result);
 		if (!goodResult) {
 			console.info(
 				"Result was not accepted so it is not saved to cache",
@@ -272,5 +279,12 @@ export default class FetchManager {
 			0,
 			url.indexOf("?") > 0 ? url.indexOf("?") : url.length
 		);
+	}
+	private debug(showMessage : boolean, ...args : any[])
+	{
+		if (!showMessage) {
+			return;
+		}
+		console.debug(args);
 	}
 }

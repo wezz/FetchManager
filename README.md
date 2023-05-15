@@ -28,7 +28,8 @@ When doing a fetch request you should define a options object that looks like th
     "querystring": { "querystringkey": "querystringvalue" },
     "requestdelay": 0,
     "cache": false,
-    "fetchoptions": null
+    "fetchoptions": null,
+    "returnrequest": false
 }
 ```
 *Note that the option fetchoptions is passed down directly to fetch.*<br/>
@@ -56,6 +57,13 @@ or you can send in an object like this
 ```
 
 If permanent is set to true it will be stored in local storage.
+
+### Return request
+If this is set to true, then we will return the original request object. 
+
+Otherwise we will attempt to parse the result as a JSON object. 
+
+Note that you can only get the JSON result from a request object once. So you will need to manage caching of the result.
 
 ### Fetch options
 Fetch options is standard fetch opions.

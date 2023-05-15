@@ -20,6 +20,8 @@ export interface IFetchManagerRequestObject {
   promise?: any;
   abortcontroller?: AbortController | Undefined;
   delaytimer?: number | null;
+  returnrequest: boolean;
+  debug: boolean;
 }
 
 export interface IFetchManagerOption {
@@ -30,6 +32,8 @@ export interface IFetchManagerOption {
   cache?: boolean | IFetchManagerCacheOption;
   fetchoptions?: RequestInit;
   signal?: AbortController.signal;
+  returnrequest: boolean;
+  debug: boolean;
 }
 
 export interface IFetchManagerCacheOption {
