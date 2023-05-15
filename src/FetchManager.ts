@@ -109,6 +109,7 @@ export default class FetchManager {
 						}
 						if (doFetchRequest) {
 							response = await fetch(reqobj.url, fetchoptions);
+							this.debug(reqobj.debug, 'Responses object from fetch', response);
 						}
 						reqobj.active = false;
 						const requestContentType = (((fetchoptions.headers ?? '' as any)["Content-Type"] ?? '') as string).toLocaleLowerCase();
@@ -118,8 +119,11 @@ export default class FetchManager {
 							doFetchRequest &&
 							requestContentType.indexOf("json") !== -1
 						) {
+							
 							reqobj.result = await response.json();
+							this.debug(reqobj.debug, 'Returning parsed JSON', reqobj.result);
 						} else {
+							this.debug(reqobj.debug, 'Returning response object', response);
 							reqobj.result = response;
 						}
 						reqobj.finished = true;
