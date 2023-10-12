@@ -29,7 +29,7 @@ When doing a fetch request you should define a options object that looks like th
     "requestdelay": 0,
     "cache": false,
     "fetchoptions": null,
-    "returnrequest": false
+    "json": true
 }
 ```
 *Note that the option fetchoptions is passed down directly to fetch.*<br/>
@@ -58,12 +58,11 @@ or you can send in an object like this
 
 If permanent is set to true it will be stored in local storage.
 
-### Return request
-If this is set to true, then we will return the original request object. 
+### JSON
+The JSON options will add the header "Content-Type": application/json and it is enabled by default.
+If another content type header has been specified it will not override it. 
 
-Otherwise we will attempt to parse the result as a JSON object. 
-
-Note that you can only get the JSON result from a request object once. So you will need to manage caching of the result.
+Set this to false if you need to fetch any mimetype that is not json.
 
 ### Fetch options
 Fetch options is standard fetch opions.
@@ -77,3 +76,8 @@ Run
 
 To run the interactive demo, run 
 ``` npm run demo ```
+
+
+## Breaking changes
+In the Version 1 release the response is no longer automatically parsed to JSON. 
+Consumers of the package will get the regular response object back just as if they had used the native fetch function.

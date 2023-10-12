@@ -2,7 +2,7 @@
 export interface FetchManagerClass {
   constructor();
   ObjToQueryString(params: object): string;
-  Fetch(options: IFetchManagerOption): Promise<any|null>;
+  Fetch(options: IFetchManagerOption): Promise<Response>;
   GetScript(url: string) : Promise<void>;
   CompileUrl(options: IFetchManagerOption): string;
   KeyFromOptions(options: IFetchManagerOption): string;
@@ -20,8 +20,8 @@ export interface IFetchManagerRequestObject {
   promise?: any;
   abortcontroller?: AbortController | Undefined;
   delaytimer?: number | null;
-  returnrequest: boolean;
-  debug: boolean;
+  json?: boolean;
+  debug?: boolean;
 }
 
 export interface IFetchManagerOption {
@@ -32,8 +32,8 @@ export interface IFetchManagerOption {
   cache?: boolean | IFetchManagerCacheOption;
   fetchoptions?: RequestInit;
   signal?: AbortController.signal;
-  returnrequest: boolean;
-  debug: boolean;
+  json?: boolean;
+  debug?: boolean;
 }
 
 export interface IFetchManagerCacheOption {

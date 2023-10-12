@@ -34,9 +34,7 @@ export default class FetchManager {
 	private defaultFetchOptions: RequestInit = {
 		method: "GET", // *GET, POST, PUT, DELETE, etc.
 		mode: "cors", // no-cors, cors, *same-origin
-		headers: {
-			"Content-Type": "application/json",
-		},
+		//headers: {},
 	};
 	constructor() {
 	}
@@ -57,6 +55,17 @@ export default class FetchManager {
 		const key = this.getKey(options);
 		const reqobj = this.getRequestObj(key, options);
 		let fetchoptions = this.parseFetchOptions(options);
+		
+
+		if (options.json && !fetchoptions.headers) {
+			const headers = new Headers(fetchoptions.headers);
+			if (!headers.has("Content-Type")) {
+				headers.append("Content-Type", "application/json");
+				fetchoptions.headers = headers;
+			}
+			//fetchoptions.headers["Content-Type"] = "application/json";
+		}
+
 		this.debug(reqobj.debug, 'Reqobj', reqobj)
 		if (reqobj.active) {
 			
@@ -114,18 +123,8 @@ export default class FetchManager {
 						reqobj.active = false;
 						const requestContentType = (((fetchoptions.headers ?? '' as any)["Content-Type"] ?? '') as string).toLocaleLowerCase();
 						this.debug(reqobj.debug, 'requestContentType ', requestContentType);
-						if (
-							reqobj.returnrequest === false &&
-							doFetchRequest &&
-							requestContentType.indexOf("json") !== -1
-						) {
-							
-							reqobj.result = await response.json();
-							this.debug(reqobj.debug, 'Returning parsed JSON', reqobj.result);
-						} else {
-							this.debug(reqobj.debug, 'Returning response object', response);
-							reqobj.result = response;
-						}
+						this.debug(reqobj.debug, 'Returning response object', response);
+						reqobj.result = response;
 						reqobj.finished = true;
 
 						this.saveResponseToCache(reqobj);
@@ -187,7 +186,6 @@ export default class FetchManager {
 					new AbortController() :
 					null,
 				delaytimer: null,
-				returnrequest: (options?.returnrequest ?? false),
 				debug: (options?.debug ?? false)
 			};
 			this.requestStore.set(key, requestObj);
@@ -284,11 +282,10 @@ export default class FetchManager {
 			url.indexOf("?") > 0 ? url.indexOf("?") : url.length
 		);
 	}
-	private debug(showMessage : boolean, ...args : any[])
+	private debug(showMessage : boolean|undefined, ...args : any[])
 	{
-		if (!showMessage) {
-			return;
+		if (showMessage) {
+			console.debug(args);
 		}
-		console.debug(args);
 	}
 }
