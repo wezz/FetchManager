@@ -168,6 +168,7 @@ export default class FetchManager {
 			(options.querystring+'') :
 			this.ObjToQueryString(options.querystring);
 		url += (options.querystring && url.indexOf("?") === -1 ? "?" : "") + querystring;
+		console.log('querystring', querystring)
 		return url;
 	}
 
@@ -273,15 +274,9 @@ export default class FetchManager {
 		return cacheKey;
 	}
 	private getKey(options: IFetchManagerOption) {
-		return options["key"] ? options["key"] : this.KeyFromOptions(options);
+		return options["key"] ? options["key"] : this.CompileUrl(options);
 	}
-	public KeyFromOptions(options: IFetchManagerOption) {
-		const url = this.CompileUrl(options);
-		return url.substring(
-			0,
-			url.indexOf("?") > 0 ? url.indexOf("?") : url.length
-		);
-	}
+
 	private debug(showMessage : boolean|undefined, ...args : any[])
 	{
 		if (showMessage) {

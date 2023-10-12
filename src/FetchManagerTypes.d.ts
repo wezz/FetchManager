@@ -5,7 +5,6 @@ export interface FetchManagerClass {
   Fetch(options: IFetchManagerOption): Promise<Response>;
   GetScript(url: string) : Promise<void>;
   CompileUrl(options: IFetchManagerOption): string;
-  KeyFromOptions(options: IFetchManagerOption): string;
 }
 
 
