@@ -147,7 +147,7 @@ class C {
   CompileUrl(e) {
     let r = e.url;
     const t = typeof e.querystring == "string" ? e.querystring + "" : this.ObjToQueryString(e.querystring);
-    return r += (e.querystring && r.indexOf("?") === -1 ? "?" : "") + t, console.log("querystring", t), r;
+    return r += (e.querystring && r.indexOf("?") === -1 ? "?" : "") + t, r;
   }
   getRequestObj(e, r) {
     if (!this.requestStore.has(e)) {
