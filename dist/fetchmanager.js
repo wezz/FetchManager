@@ -1,13 +1,13 @@
-var g = Object.defineProperty;
-var m = (o, e, r) => e in o ? g(o, e, { enumerable: !0, configurable: !0, writable: !0, value: r }) : o[e] = r;
-var i = (o, e, r) => (m(o, typeof e != "symbol" ? e + "" : e, r), r);
+var m = Object.defineProperty;
+var g = (o, e, r) => e in o ? m(o, e, { enumerable: !0, configurable: !0, writable: !0, value: r }) : o[e] = r;
+var i = (o, e, r) => (g(o, typeof e != "symbol" ? e + "" : e, r), r);
 var y = Object.defineProperty, p = (o, e, r) => e in o ? y(o, e, { enumerable: !0, configurable: !0, writable: !0, value: r }) : o[e] = r, b = (o, e, r) => (p(o, typeof e != "symbol" ? e + "" : e, r), r);
 class w {
   constructor(e = "cache") {
     b(this, "prefix"), this.prefix = e;
   }
   getStorageMedium(e = !0) {
-    return e && typeof window.localStorage < "u" ? window.localStorage : e && typeof window.sessionStorage < "u" ? window.sessionStorage : null;
+    return typeof window > "u" || typeof window.localStorage > "u" ? null : e ? window.localStorage : window.sessionStorage;
   }
   Has(e) {
     return typeof this.Get(`${this.prefix}-${e}`) < "u";
@@ -97,19 +97,17 @@ class R {
     return this.has(e) ? delete this.root[this.storeNamespace][this.storeName][e] : !1;
   }
 }
-const d = new w("fetchmanager"), O = new R("requests", "fetchmanagerstore");
+const f = new w("fetchmanager"), v = new R("requests", "fetchmanagerstore");
 class C {
   constructor() {
     i(this, "moduleName", "FetchManager");
-    i(this, "requestStore", O);
+    i(this, "requestStore", v);
     i(this, "defaultFetchOptions", {
       method: "GET",
       // *GET, POST, PUT, DELETE, etc.
-      mode: "cors",
+      mode: "cors"
       // no-cors, cors, *same-origin
-      headers: {
-        "Content-Type": "application/json"
-      }
+      //headers: {},
     });
   }
   ObjToQueryString(e) {
@@ -120,14 +118,18 @@ class C {
       return console.error("Need a url to do a request"), null;
     const r = this.getKey(e), t = this.getRequestObj(r, e);
     let a = this.parseFetchOptions(e);
+    if (e.json && !a.headers) {
+      const s = new Headers(a.headers);
+      s.has("Content-Type") || (s.append("Content-Type", "application/json"), a.headers = s);
+    }
     return this.debug(t.debug, "Reqobj", t), t.active && e.url !== t.url && typeof window.AbortController < "u" && t.abortcontroller && typeof t.abortcontroller.abort == "function" && (t.abortcontroller.abort(), t.abortcontroller = new AbortController(), console.info("Previous request was cancelled", t), this.debug(t.debug, "Previous request was cancelled", t), t.active = !1), e.url !== t.url ? (typeof t.abortcontroller < "u" && t.abortcontroller && typeof t.abortcontroller.signal < "u" && (e.signal = t.abortcontroller.signal), t.url = this.CompileUrl(e), t.active = !0, t.promise = new Promise(async (s, l) => {
       const h = typeof e.requestdelay == "number" ? e.requestdelay : 0;
       t.delaytimer !== null && (window.clearTimeout(t.delaytimer), t.delaytimer = null), this.debug(t.debug, "Request will be delayed by " + h + "ms", t), t.delaytimer = window.setTimeout(async () => {
         try {
           let c = !t.cache.usecache, n = null;
           t.cache.usecache && (n = this.getResponseFromCache(t), this.debug(t.debug, "Response from cache ", n), n == null && (c = !0)), c && (n = await fetch(t.url, a), this.debug(t.debug, "Responses object from fetch", n)), t.active = !1;
-          const f = ((a.headers ?? "")["Content-Type"] ?? "").toLocaleLowerCase();
-          this.debug(t.debug, "requestContentType ", f), t.returnrequest === !1 && c && f.indexOf("json") !== -1 ? (t.result = await n.json(), this.debug(t.debug, "Returning parsed JSON", t.result)) : (this.debug(t.debug, "Returning response object", n), t.result = n), t.finished = !0, this.saveResponseToCache(t), s(t.result);
+          const d = ((a.headers ?? "")["Content-Type"] ?? "").toLocaleLowerCase();
+          this.debug(t.debug, "requestContentType ", d), this.debug(t.debug, "Returning response object", n), t.result = n, t.finished = !0, this.saveResponseToCache(t), s(t.result);
         } catch (c) {
           t.active = !1, console.error(c), l(t);
         }
@@ -160,7 +162,6 @@ class C {
         promise: null,
         abortcontroller: typeof window.AbortController == "function" ? new AbortController() : null,
         delaytimer: null,
-        returnrequest: (r == null ? void 0 : r.returnrequest) ?? !1,
         debug: (r == null ? void 0 : r.debug) ?? !1
       };
       this.requestStore.set(e, t);
@@ -168,7 +169,7 @@ class C {
     return this.requestStore.get(e);
   }
   getResponseFromCache(e) {
-    const r = d.Get(e.cache.cachekey);
+    const r = f.Get(e.cache.cachekey);
     return this.validResponse(r) ? r : null;
   }
   validResponse(e) {
@@ -185,7 +186,7 @@ class C {
       ), !1;
     e.cache.iscached = !0;
     try {
-      return d.Set(
+      return f.Set(
         e.cache.cachekey,
         e.result,
         e.cache.pemanent
