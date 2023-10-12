@@ -16,6 +16,5 @@ export default class FetchManager {
     private getRequestCacheOptions;
     private getCacheKey;
     private getKey;
-    KeyFromOptions(options: IFetchManagerOption): string;
     private debug;
 }

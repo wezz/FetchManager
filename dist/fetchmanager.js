@@ -126,12 +126,12 @@ class C {
       const h = typeof e.requestdelay == "number" ? e.requestdelay : 0;
       t.delaytimer !== null && (window.clearTimeout(t.delaytimer), t.delaytimer = null), this.debug(t.debug, "Request will be delayed by " + h + "ms", t), t.delaytimer = window.setTimeout(async () => {
         try {
-          let c = !t.cache.usecache, n = null;
-          t.cache.usecache && (n = this.getResponseFromCache(t), this.debug(t.debug, "Response from cache ", n), n == null && (c = !0)), c && (n = await fetch(t.url, a), this.debug(t.debug, "Responses object from fetch", n)), t.active = !1;
+          let n = !t.cache.usecache, c = null;
+          t.cache.usecache && (c = this.getResponseFromCache(t), this.debug(t.debug, "Response from cache ", c), c == null && (n = !0)), n && (c = await fetch(t.url, a), this.debug(t.debug, "Responses object from fetch", c)), t.active = !1;
           const d = ((a.headers ?? "")["Content-Type"] ?? "").toLocaleLowerCase();
-          this.debug(t.debug, "requestContentType ", d), this.debug(t.debug, "Returning response object", n), t.result = n, t.finished = !0, this.saveResponseToCache(t), s(t.result);
-        } catch (c) {
-          t.active = !1, console.error(c), l(t);
+          this.debug(t.debug, "requestContentType ", d), this.debug(t.debug, "Returning response object", c), t.result = c, t.finished = !0, this.saveResponseToCache(t), s(t.result);
+        } catch (n) {
+          t.active = !1, console.error(n), l(t);
         }
       }, h);
     }), t.promise) : t.finished && t.result !== null ? new Promise(async (s) => {
@@ -147,7 +147,7 @@ class C {
   CompileUrl(e) {
     let r = e.url;
     const t = typeof e.querystring == "string" ? e.querystring + "" : this.ObjToQueryString(e.querystring);
-    return r += (e.querystring && r.indexOf("?") === -1 ? "?" : "") + t, r;
+    return r += (e.querystring && r.indexOf("?") === -1 ? "?" : "") + t, console.log("querystring", t), r;
   }
   getRequestObj(e, r) {
     if (!this.requestStore.has(e)) {
@@ -214,14 +214,7 @@ class C {
     return this.getKey(e) + this.CompileUrl(e);
   }
   getKey(e) {
-    return e.key ? e.key : this.KeyFromOptions(e);
-  }
-  KeyFromOptions(e) {
-    const r = this.CompileUrl(e);
-    return r.substring(
-      0,
-      r.indexOf("?") > 0 ? r.indexOf("?") : r.length
-    );
+    return e.key ? e.key : this.CompileUrl(e);
   }
   debug(e, ...r) {
     e && console.debug(r);
