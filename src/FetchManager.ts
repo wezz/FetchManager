@@ -168,7 +168,6 @@ export default class FetchManager {
 			(options.querystring+'') :
 			this.ObjToQueryString(options.querystring);
 		url += (options.querystring && url.indexOf("?") === -1 ? "?" : "") + querystring;
-		console.log('querystring', querystring)
 		return url;
 	}
 
