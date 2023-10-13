@@ -67,7 +67,6 @@ export default class FetchManager {
 				headers.append("Content-Type", "application/json");
 				fetchoptions.headers = headers;
 			}
-			//fetchoptions.headers["Content-Type"] = "application/json";
 		}
 
 		this.debug(reqobj.debug, 'Reqobj', reqobj)
@@ -124,16 +123,17 @@ export default class FetchManager {
 							response = await fetch(reqobj.url, fetchoptions);
 							this.debug(reqobj.debug, 'Responses object from fetch', response);
 						}
+						console.log('response', response)
 						reqobj.active = false;
 						const requestContentType = (((fetchoptions.headers ?? '' as any)["Content-Type"] ?? '') as string).toLocaleLowerCase();
 						this.debug(reqobj.debug, 'requestContentType ', requestContentType);
 						this.debug(reqobj.debug, 'Returning response object', response);
-						reqobj.result = response;
+						reqobj.result = response.clone();
 						reqobj.finished = true;
 
 						this.saveResponseToCache(reqobj);
 
-						resolve(reqobj.result);
+						resolve(reqobj.result.clone());
 					} catch (err) {
 						reqobj.active = false;
 
@@ -145,7 +145,7 @@ export default class FetchManager {
 			return reqobj.promise;
 		} else if (reqobj.finished && reqobj.result !== null) {
 			return new Promise(async (resolve) => {
-				resolve(reqobj.result);
+				resolve(reqobj.result.clone());
 			});
 		} else if (reqobj["promise"] && reqobj.active) {
 			return reqobj["promise"];
@@ -203,7 +203,7 @@ export default class FetchManager {
 		if (!goodResult) {
 			return null;
 		}
-		return storedResponse;
+		return storedResponse.clone();
 	}
 
 	private validResponse(result: any) {
@@ -231,7 +231,7 @@ export default class FetchManager {
 		try {
 			storeManager.Set(
 				reqobj.cache.cachekey,
-				reqobj.result,
+				reqobj.result.clone(),
 				reqobj.cache.pemanent
 			);
 			return true;
