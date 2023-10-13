@@ -1,6 +1,6 @@
 {
   "name": "@wezz/fetchmanager",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "A script that improves a javascript fetch requests with request throttling, managing querystring parameters and delayed request start",
   "type": "module",
   "main": "./dist/fetchmanager.umd.cjs",
