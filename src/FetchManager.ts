@@ -51,7 +51,7 @@ export default class FetchManager {
 	}
 
 	public async Fetch(initOptions: IFetchManagerOption) {
-		const options = { ...this.defaultOptions, initOptions};
+		const options = { ...this.defaultOptions, ...initOptions};
 		if (!options.url) {
 			console.error("Need a url to do a request");
 			return null;
