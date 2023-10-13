@@ -31,6 +31,9 @@ import {
 export default class FetchManager {
 	public moduleName = "FetchManager";
 	private requestStore = windowReferenceStore;
+	private defaultOptions: IFetchManagerOption = {
+		json: true
+	} as IFetchManagerOption;
 	private defaultFetchOptions: RequestInit = {
 		method: "GET", // *GET, POST, PUT, DELETE, etc.
 		mode: "cors", // no-cors, cors, *same-origin
@@ -47,7 +50,8 @@ export default class FetchManager {
 		return urlParams.toString();
 	}
 
-	public async Fetch(options: IFetchManagerOption) {
+	public async Fetch(initOptions: IFetchManagerOption) {
+		const options = { ...this.defaultOptions, initOptions};
 		if (!options.url) {
 			console.error("Need a url to do a request");
 			return null;
