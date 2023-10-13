@@ -2,10 +2,11 @@ import { IFetchManagerOption } from "./FetchManagerTypes";
 export default class FetchManager {
     moduleName: string;
     private requestStore;
+    private defaultOptions;
     private defaultFetchOptions;
     constructor();
     ObjToQueryString(params: any): string;
-    Fetch(options: IFetchManagerOption): Promise<any>;
+    Fetch(initOptions: IFetchManagerOption): Promise<any>;
     GetScript(url: string): Promise<unknown>;
     CompileUrl(options: IFetchManagerOption): string;
     private getRequestObj;
