@@ -117,7 +117,7 @@ class $ {
     return typeof e != "object" ? "" : new URLSearchParams(e).toString();
   }
   async Fetch(e) {
-    const t = { ...this.defaultOptions, initOptions: e };
+    const t = { ...this.defaultOptions, ...e };
     if (!t.url)
       return console.error("Need a url to do a request"), null;
     const s = this.getKey(t), r = this.getRequestObj(s, t);
