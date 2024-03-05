@@ -158,6 +158,32 @@
       </pre>
       <pre id="exampletarget4" class="exampletarget"></pre>
     </section>
+
+    <section>
+      <h2>Example 5. Cache request</h2>
+      <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+          const fetchManager = new window.fetchmanager();
+          const response = await fetchManager.Fetch({ 
+            "key":"example5",
+            "url": "/text.txt",
+            "cache":true
+          });
+          const result = await response.clone().text();
+          document.getElementById('exampletarget5').innerHTML += "Requested url:\n" + response.url + "\n\n";
+          document.getElementById('exampletarget5').innerHTML += "Result:\n" + JSON.stringify(result);
+        });
+      </script>
+      <pre>
+<code>
+  const result = await fetchManager.Fetch({ 
+    "url": "/text.txt",
+    "cache":true
+  });
+</code>
+      </pre>
+      <pre id="exampletarget5" class="exampletarget"></pre>
+    </section>
   </div>
 
 </body>

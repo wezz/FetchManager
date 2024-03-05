@@ -45,7 +45,7 @@
     "vite-plugin-dts": "^2.0.2"
   },
   "dependencies": {
-    "@wezz/store-manager": "^0.1.4",
-    "@wezz/window-reference-store": "^0.1.3"
+    "@wezz/store-manager": "0.1.4",
+    "@wezz/window-reference-store": "0.1.3"
   }
 }
