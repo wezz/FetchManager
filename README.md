@@ -53,7 +53,7 @@ If this is enabled then any request will be cached in either local or session st
 You can either send in a boolean, 
 or you can send in an object like this
 ```
-{ pemanent: true, cachekey: 'myCacheKey' }
+{ permanent: true, cachekey: 'myCacheKey' }
 ```
 
 If permanent is set to true it will be stored in local storage.

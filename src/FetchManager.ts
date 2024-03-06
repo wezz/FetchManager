@@ -257,7 +257,7 @@ export default class FetchManager {
     reqobj.cache.iscached = true;
     const content = await reqobj.result.clone().text();
     try {
-      storeManager.Set(reqobj.cache.cachekey, content, reqobj.cache.pemanent);
+      storeManager.Set(reqobj.cache.cachekey, content, reqobj.cache.permanent);
       return true;
     } catch {
       console.error("Unable to save result", reqobj);
@@ -278,10 +278,12 @@ export default class FetchManager {
   }
   private getRequestCacheOptions(options: IFetchManagerOption) {
     const cacheOptions = {
-      pemanent:
+      permanent:
         typeof options.cache === "object" &&
-        typeof options.cache.pemanent === "boolean" &&
-        options.cache.pemanent === true,
+        ((typeof options.cache.permanent === "boolean" &&
+          options.cache.permanent === true) ||
+          (typeof options.cache.pemanent === "boolean" &&
+            options.cache.pemanent === true)),
       usecache:
         typeof options.cache === "boolean"
           ? options.cache

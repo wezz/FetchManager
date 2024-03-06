@@ -37,7 +37,8 @@ export interface IFetchManagerOption {
 
 export interface IFetchManagerCacheOption {
   usecache: boolean;
-  pemanent: boolean;
+  permanent: boolean;
+  pemanent: boolean; // Obsolete misspelling kept for legacy reasons
   cachekey: string;
   iscached?: boolean;
 }
