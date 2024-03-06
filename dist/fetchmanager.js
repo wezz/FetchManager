@@ -1,7 +1,7 @@
 var p = Object.defineProperty;
-var y = (n, e, t) => e in n ? p(n, e, { enumerable: !0, configurable: !0, writable: !0, value: t }) : n[e] = t;
-var i = (n, e, t) => (y(n, typeof e != "symbol" ? e + "" : e, t), t);
-var g = Object.defineProperty, b = (n, e, t) => e in n ? g(n, e, { enumerable: !0, configurable: !0, writable: !0, value: t }) : n[e] = t, w = (n, e, t) => (b(n, typeof e != "symbol" ? e + "" : e, t), t);
+var y = (a, e, t) => e in a ? p(a, e, { enumerable: !0, configurable: !0, writable: !0, value: t }) : a[e] = t;
+var i = (a, e, t) => (y(a, typeof e != "symbol" ? e + "" : e, t), t);
+var g = Object.defineProperty, b = (a, e, t) => e in a ? g(a, e, { enumerable: !0, configurable: !0, writable: !0, value: t }) : a[e] = t, w = (a, e, t) => (b(a, typeof e != "symbol" ? e + "" : e, t), t);
 class S {
   constructor(e = "cache") {
     w(this, "prefix"), this.prefix = e;
@@ -41,8 +41,8 @@ class S {
       typeof t == "object" && (t = JSON.stringify(t));
       try {
         r.setItem(`${this.prefix}-${e}`, t), s = !0;
-      } catch (a) {
-        console.error("Unable to save object", a);
+      } catch (n) {
+        console.error("Unable to save object", n);
       }
     }
     return s;
@@ -52,7 +52,7 @@ class S {
     t && t.removeItem(`${this.prefix}-${e}`), o && o.removeItem(`${this.prefix}-${e}`);
   }
 }
-var R = Object.defineProperty, N = (n, e, t) => e in n ? R(n, e, { enumerable: !0, configurable: !0, writable: !0, value: t }) : n[e] = t, u = (n, e, t) => (N(n, typeof e != "symbol" ? e + "" : e, t), t);
+var R = Object.defineProperty, N = (a, e, t) => e in a ? R(a, e, { enumerable: !0, configurable: !0, writable: !0, value: t }) : a[e] = t, u = (a, e, t) => (N(a, typeof e != "symbol" ? e + "" : e, t), t);
 class v {
   constructor(e = "", t = "", o = null) {
     if (u(this, "storeNamespace", "windowReferenceStore"), u(this, "storeName", ""), u(this, "root", typeof window < "u" ? window : typeof global < "u" ? global : typeof document < "u" ? document : {}), t ? this.storeNamespace = t : console.info("It's recommended to assign a namespace for your stores"), e)
@@ -123,10 +123,10 @@ class $ {
     const o = this.getKey(t), r = this.getRequestObj(o, t);
     let s = this.parseFetchOptions(t);
     if (t.json && !s.headers) {
-      const a = new Headers(s.headers);
-      a.has("Content-Type") || (a.append("Content-Type", "application/json"), s.headers = a);
+      const n = new Headers(s.headers);
+      n.has("Content-Type") || (n.append("Content-Type", "application/json"), s.headers = n);
     }
-    return this.debug(r.debug, "Reqobj", r), r.active && t.url !== r.url && typeof window.AbortController < "u" && r.abortcontroller && typeof r.abortcontroller.abort == "function" && (r.abortcontroller.abort(), r.abortcontroller = new AbortController(), console.info("Previous request was cancelled", r), this.debug(r.debug, "Previous request was cancelled", r), r.active = !1), t.url !== r.url ? (typeof r.abortcontroller < "u" && r.abortcontroller && typeof r.abortcontroller.signal < "u" && (t.signal = r.abortcontroller.signal), r.url = this.CompileUrl(t), r.active = !0, r.promise = new Promise(async (a, d) => {
+    return this.debug(r.debug, "Reqobj", r), r.active && t.url !== r.url && typeof window.AbortController < "u" && r.abortcontroller && typeof r.abortcontroller.abort == "function" && (r.abortcontroller.abort(), r.abortcontroller = new AbortController(), console.info("Previous request was cancelled", r), this.debug(r.debug, "Previous request was cancelled", r), r.active = !1), t.url !== r.url ? (typeof r.abortcontroller < "u" && r.abortcontroller && typeof r.abortcontroller.signal < "u" && (t.signal = r.abortcontroller.signal), r.url = this.CompileUrl(t), r.active = !0, r.promise = new Promise(async (n, d) => {
       const h = typeof t.requestdelay == "number" ? t.requestdelay : 0;
       r.delaytimer !== null && (window.clearTimeout(r.delaytimer), r.delaytimer = null), this.debug(
         r.debug,
@@ -137,13 +137,13 @@ class $ {
           let l = !r.cache.usecache, c = null;
           r.cache.usecache && (c = this.getResponseFromCache(r), this.debug(r.debug, "Response from cache ", c), c == null && (l = !0)), l && (c = await fetch(r.url, s), this.debug(r.debug, "Responses object from fetch", c)), r.active = !1;
           const m = ((s.headers ?? "")["Content-Type"] ?? "").toLocaleLowerCase();
-          this.debug(r.debug, "requestContentType ", m), this.debug(r.debug, "Returning response object", c), r.result = (c == null ? void 0 : c.clone()) ?? null, r.finished = !0, r.cache.usecache && await this.saveResponseToCache(r), a(r.result.clone());
+          this.debug(r.debug, "requestContentType ", m), this.debug(r.debug, "Returning response object", c), r.result = (c == null ? void 0 : c.clone()) ?? null, r.finished = !0, r.cache.usecache && await this.saveResponseToCache(r), n(r.result.clone());
         } catch (l) {
           r.active = !1, console.error(l), d(r);
         }
       }, h);
-    }), r.promise) : r.finished && r.result !== null ? new Promise(async (a) => {
-      a(r.result.clone());
+    }), r.promise) : r.finished && r.result !== null ? new Promise(async (n) => {
+      n(r.result.clone());
     }) : r.promise && r.active ? r.promise : null;
   }
   GetScript(e) {
@@ -214,7 +214,7 @@ class $ {
     e.cache.iscached = !0;
     const o = await e.result.clone().text();
     try {
-      return f.Set(e.cache.cachekey, o, e.cache.pemanent), !0;
+      return f.Set(e.cache.cachekey, o, e.cache.permanent), !0;
     } catch {
       return console.error("Unable to save result", e), !1;
     }
@@ -228,7 +228,7 @@ class $ {
   }
   getRequestCacheOptions(e) {
     return {
-      pemanent: typeof e.cache == "object" && typeof e.cache.pemanent == "boolean" && e.cache.pemanent === !0,
+      permanent: typeof e.cache == "object" && (typeof e.cache.permanent == "boolean" && e.cache.permanent === !0 || typeof e.cache.pemanent == "boolean" && e.cache.pemanent === !0),
       usecache: typeof e.cache == "boolean" ? e.cache : typeof e.cache == "object" && typeof e.cache.usecache == "boolean" && e.cache.usecache === !0,
       cachekey: typeof e.cache == "object" && typeof e.cache.cachekey == "string" && e.cache.cachekey.length !== 0 ? e.cache.cachekey : this.getCacheKey(e),
       iscached: !1
