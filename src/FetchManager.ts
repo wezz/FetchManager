@@ -21,13 +21,17 @@ import { StoreManager } from "@wezz/store-manager";
 import { WindowReferenceStore } from "@wezz/window-reference-store";
 
 const storeManager = new StoreManager("fetchmanager");
-const windowReferenceStore = new WindowReferenceStore("requests", "fetchmanagerstore");
+const windowReferenceStore = new WindowReferenceStore(
+  "requests",
+  "fetchmanagerstore",
+);
 import {
-	IFetchManagerRequestObject,
-	IFetchManagerOption,
-	IFetchManagerCacheOption
+  IFetchManagerRequestObject,
+  IFetchManagerOption,
+  IFetchManagerCacheOption,
 } from "./FetchManagerTypes";
 ("use strict");
+
 export default class FetchManager {
   public moduleName = "FetchManager";
   private requestStore = windowReferenceStore;
@@ -57,7 +61,7 @@ export default class FetchManager {
     }
     const key = this.getKey(options);
     const reqobj = this.getRequestObj(key, options);
-    let fetchoptions = this.parseFetchOptions(options);
+    const fetchoptions = this.parseFetchOptions(options);
 
     if (options.json && !fetchoptions.headers) {
       const headers = new Headers(fetchoptions.headers);
@@ -106,7 +110,7 @@ export default class FetchManager {
         this.debug(
           reqobj.debug,
           "Request will be delayed by " + delay + "ms",
-          reqobj
+          reqobj,
         );
         reqobj.delaytimer = window.setTimeout(async () => {
           try {
@@ -205,12 +209,12 @@ export default class FetchManager {
 
   private getResponseFromCache(reqobj: IFetchManagerRequestObject) {
     const storedResponse = storeManager.Get(reqobj.cache.cachekey);
-    let goodResult = this.validResponse(storedResponse);
+    const goodResult = this.validResponse(storedResponse);
     if (!goodResult) {
       return null;
     }
     const artificialResponse = {
-      body: function () {},
+      body: function () {}, // eslint-disable-line @typescript-eslint/no-empty-function
       bodyUsed: false,
       headers: {},
       redirected: false,
@@ -241,16 +245,17 @@ export default class FetchManager {
       (typeof result === "string" || typeof result === "object");
     return isValidResult;
   }
+
   private async saveResponseToCache(reqobj: IFetchManagerRequestObject) {
     if (reqobj.cache.usecache !== true || !reqobj.result) {
       return false;
     }
-    let goodResult = this.validResponse(reqobj.result);
+    const goodResult = this.validResponse(reqobj.result);
     this.debug(reqobj.debug, "Storing response in cache ", reqobj.result);
     if (!goodResult) {
       console.info(
         "Result was not accepted so it is not saved to cache",
-        reqobj
+        reqobj,
       );
       return false;
     }
@@ -276,6 +281,7 @@ export default class FetchManager {
     };
     return fetchoptions;
   }
+
   private getRequestCacheOptions(options: IFetchManagerOption) {
     const cacheOptions = {
       permanent:
@@ -300,6 +306,7 @@ export default class FetchManager {
     } as IFetchManagerCacheOption;
     return cacheOptions as IFetchManagerCacheOption;
   }
+
   private getCacheKey(options: IFetchManagerOption) {
     const reqkey = this.getKey(options);
     const cacheKey = reqkey + this.CompileUrl(options);
@@ -309,7 +316,7 @@ export default class FetchManager {
     return options["key"] ? options["key"] : this.CompileUrl(options);
   }
 
-  private debug(showMessage: boolean | undefined, ...args: any[]) {
+  private debug(showMessage: boolean | undefined, ...args: unknown[]) {
     if (showMessage) {
       console.debug(args);
     }

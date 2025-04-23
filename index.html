@@ -1,149 +1,173 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + TS</title>
+    <script type="module" src="/src/main.ts"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+        max-width: 800px;
+      }
 
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vite + TS</title>
-  <script type="module" src="/src/main.ts"></script>
-  <style>
-    body {
-      font-family: sans-serif;
-      margin: 0 auto;
-      padding: 2rem 1rem;
-      max-width: 800px;
-    }
+      button {
+        cursor: pointer;
+        background: rgba(0, 0, 0, 0);
+        border: 3px solid #666;
+        border-radius: 3px;
+        padding: 0.5rem;
+        margin: 0 0 1rem;
+        transition: all 0.1s ease;
+      }
 
-    button {
-      cursor: pointer;
-      background: rgba(0, 0, 0, 0);
-      border: 3px solid #666;
-      border-radius: 3px;
-      padding: .5rem;
-      margin: 0 0 1rem;
-      transition: all .10s ease;
-    }
+      button:hover {
+        background: rgba(0, 0, 0, 0.1);
+        border-color: 999;
+      }
 
-    button:hover {
-      background: rgba(0, 0, 0, .1);
-      border-color: 999;
-    }
+      button[data-ariamanager="activated"] {
+        border-color: green;
+      }
 
-    button[data-ariamanager="activated"] {
-      border-color: green;
-    }
+      [aria-hidden="true"] {
+        display: none;
+      }
 
-    [aria-hidden="true"] {
-      display: none;
-    }
+      .exampletarget {
+        border: 1px solid #ccc;
+        padding: 1rem;
+      }
+    </style>
+  </head>
 
-    .exampletarget {
-      border: 1px solid #ccc;
-      padding: 1rem;
-    }
-  </style>
-</head>
+  <body>
+    <div id="root">
+      <h1>Fetch Manager Examples</h1>
+      <p>
+        This page shows an examples of how the Fetch manager can be utilized.
+      </p>
+    </div>
 
-<body>
-  <div id="root">
-    <h1>Fetch Manager Examples</h1>
-    <p>This page shows an examples of how the Fetch manager can be utilized.</p>
-  </div>
-
-
-  <div id="examples">
-    <section>
-      <h2>Example 1. Simplest fetch</h2>
-      <script>
-        document.addEventListener("DOMContentLoaded", async () => {
-          const fetchManager = new window.fetchmanager();
-          const result = await fetchManager.Fetch({ "url": "/data.json" });
-          console.log('Simple fetch result:', result);
-          document.getElementById('exampletarget1').innerHTML = "Result:\n" + JSON.stringify(result);
-        });
-      </script>
-      <pre>
+    <div id="examples">
+      <section>
+        <h2>Example 1. Simplest fetch</h2>
+        <script>
+          document.addEventListener("DOMContentLoaded", async () => {
+            const fetchManager = new window.fetchmanager();
+            const result = await fetchManager.Fetch({ url: "/data.json" });
+            console.log("Simple fetch result:", result);
+            document.getElementById("exampletarget1").innerHTML =
+              "Result:\n" + JSON.stringify(result);
+          });
+        </script>
+        <pre>
 <code>
   const result = await fetchManager.Fetch({ "url": "/data.json" });
 </code>
       </pre>
-      <pre id="exampletarget1" class="exampletarget"></pre>
-    </section>
+        <pre id="exampletarget1" class="exampletarget"></pre>
+      </section>
 
-    <section>
-      <h2>Example 2. Delay fetch request with 2 seconds</h2>
-      <script>
-        document.addEventListener("DOMContentLoaded", async () => {
-          document.getElementById('exampletarget2').innerHTML += "Init: " + (new Date()).toISOString() + "\n";
-          const fetchManager = new window.fetchmanager();
-          document.getElementById('exampletarget2').innerHTML += "Fetch command initiated: " + (new Date()).toISOString() + "\n";
-          const response = await fetchManager.Fetch({ "url": "/data.json", "requestdelay": 2000 });
-          const result = await response;
-          
-          console.log('Simple fetch result:', result);
-          document.getElementById('exampletarget2').innerHTML += "Fetch response: " + (new Date()).toISOString() + "\n";
-          document.getElementById('exampletarget2').innerHTML += "Result:\n" + JSON.stringify(result);
-          
-        });
-      </script>
-      <pre>
+      <section>
+        <h2>Example 2. Delay fetch request with 2 seconds</h2>
+        <script>
+          document.addEventListener("DOMContentLoaded", async () => {
+            document.getElementById("exampletarget2").innerHTML +=
+              "Init: " + new Date().toISOString() + "\n";
+            const fetchManager = new window.fetchmanager();
+            document.getElementById("exampletarget2").innerHTML +=
+              "Fetch command initiated: " + new Date().toISOString() + "\n";
+            const response = await fetchManager.Fetch({
+              url: "/data.json",
+              requestdelay: 2000,
+            });
+            const result = await response;
+
+            console.log("Simple fetch result:", result);
+            document.getElementById("exampletarget2").innerHTML +=
+              "Fetch response: " + new Date().toISOString() + "\n";
+            document.getElementById("exampletarget2").innerHTML +=
+              "Result:\n" + JSON.stringify(result);
+          });
+        </script>
+        <pre>
 <code>
   const result = await fetchManager.Fetch({ "url": "/data.json", "requestdelay": 2000 });
 </code>
       </pre>
-      <pre id="exampletarget2" class="exampletarget"></pre>
-    </section>
-    <section>
-      <h2>Example 3. Debounced fetch (automatic abort)</h2>
-      <script>
-        document.addEventListener("DOMContentLoaded", async () => {
-          const fetchManager = new window.fetchmanager();
-          let response = await fetchManager.Fetch({ "url": "/data.json", "key":"example3request" });
-          result = await fetchManager.Fetch({ "url": "/data.json", "key":"example3request" });
-          document.getElementById('exampletarget3').innerHTML = "Result:\n" + JSON.stringify(result);
-        });
+        <pre id="exampletarget2" class="exampletarget"></pre>
+      </section>
+      <section>
+        <h2>Example 3. Debounced fetch (automatic abort)</h2>
+        <script>
+          document.addEventListener("DOMContentLoaded", async () => {
+            const fetchManager = new window.fetchmanager();
+            let response = await fetchManager.Fetch({
+              url: "/data.json",
+              key: "example3request",
+            });
+            result = await fetchManager.Fetch({
+              url: "/data.json",
+              key: "example3request",
+            });
+            document.getElementById("exampletarget3").innerHTML =
+              "Result:\n" + JSON.stringify(result);
+          });
 
-        document.addEventListener("DOMContentLoaded", async () => {
-          const fetchManager = new window.fetchmanager();
-          const response = await fetchManager.Fetch({ "url": "/data.json", "key":"example3request" });
-          const result = response;
-          const response2 = await fetchManager.Fetch({ "url": "/data.json", "key":"example3request" });
-          const result2 = response;
-          document.getElementById('exampletarget3').innerHTML += "Results: ";
-          document.getElementById('exampletarget3').innerHTML += "1: " + JSON.stringify(result);
-          document.getElementById('exampletarget3').innerHTML += "2: " + JSON.stringify(result2);
-        });
-      </script>
-      <pre>
+          document.addEventListener("DOMContentLoaded", async () => {
+            const fetchManager = new window.fetchmanager();
+            const response = await fetchManager.Fetch({
+              url: "/data.json",
+              key: "example3request",
+            });
+            const result = response;
+            const response2 = await fetchManager.Fetch({
+              url: "/data.json",
+              key: "example3request",
+            });
+            const result2 = response;
+            document.getElementById("exampletarget3").innerHTML += "Results: ";
+            document.getElementById("exampletarget3").innerHTML +=
+              "1: " + JSON.stringify(result);
+            document.getElementById("exampletarget3").innerHTML +=
+              "2: " + JSON.stringify(result2);
+          });
+        </script>
+        <pre>
 <code>
   const result = await fetchManager.Fetch({ "url": "/data.json" });
 </code>
       </pre>
-      <pre id="exampletarget3" class="exampletarget"></pre>
-    </section>
-    <section>
-      <h2>Example 4. Request with parsed querystring object</h2>
-      <script>
-        document.addEventListener("DOMContentLoaded", async () => {
-          const fetchManager = new window.fetchmanager();
-          const response = await fetchManager.Fetch({ 
-            "key":"example4",
-            "url": "/data.json",
-            "querystring": {
-              "numbervar": 123,
-              "boolvar": true,
-              "stringvar": "stringcontent",
-              "arrayvar":["foo", "bar"]
-            },
-            "returnrequest":true
+        <pre id="exampletarget3" class="exampletarget"></pre>
+      </section>
+      <section>
+        <h2>Example 4. Request with parsed querystring object</h2>
+        <script>
+          document.addEventListener("DOMContentLoaded", async () => {
+            const fetchManager = new window.fetchmanager();
+            const response = await fetchManager.Fetch({
+              key: "example4",
+              url: "/data.json",
+              querystring: {
+                numbervar: 123,
+                boolvar: true,
+                stringvar: "stringcontent",
+                arrayvar: ["foo", "bar"],
+              },
+              returnrequest: true,
+            });
+            const result = await response.json();
+            document.getElementById("exampletarget4").innerHTML +=
+              "Requested url:\n" + response.url + "\n\n";
+            document.getElementById("exampletarget4").innerHTML +=
+              "Result:\n" + JSON.stringify(result);
           });
-          const result = await response.json();
-          document.getElementById('exampletarget4').innerHTML += "Requested url:\n" + response.url + "\n\n";
-          document.getElementById('exampletarget4').innerHTML += "Result:\n" + JSON.stringify(result);
-        });
-      </script>
-      <pre>
+        </script>
+        <pre>
 <code>
   const result = await fetchManager.Fetch({ 
     "url": "/data.json",
@@ -156,25 +180,27 @@
   });
 </code>
       </pre>
-      <pre id="exampletarget4" class="exampletarget"></pre>
-    </section>
+        <pre id="exampletarget4" class="exampletarget"></pre>
+      </section>
 
-    <section>
-      <h2>Example 5. Cache request</h2>
-      <script>
-        document.addEventListener("DOMContentLoaded", async () => {
-          const fetchManager = new window.fetchmanager();
-          const response = await fetchManager.Fetch({ 
-            "key":"example5",
-            "url": "/text.txt",
-            "cache":true
+      <section>
+        <h2>Example 5. Cache request</h2>
+        <script>
+          document.addEventListener("DOMContentLoaded", async () => {
+            const fetchManager = new window.fetchmanager();
+            const response = await fetchManager.Fetch({
+              key: "example5",
+              url: "/text.txt",
+              cache: true,
+            });
+            const result = await response.clone().text();
+            document.getElementById("exampletarget5").innerHTML +=
+              "Requested url:\n" + response.url + "\n\n";
+            document.getElementById("exampletarget5").innerHTML +=
+              "Result:\n" + JSON.stringify(result);
           });
-          const result = await response.clone().text();
-          document.getElementById('exampletarget5').innerHTML += "Requested url:\n" + response.url + "\n\n";
-          document.getElementById('exampletarget5').innerHTML += "Result:\n" + JSON.stringify(result);
-        });
-      </script>
-      <pre>
+        </script>
+        <pre>
 <code>
   const result = await fetchManager.Fetch({ 
     "url": "/text.txt",
@@ -182,10 +208,8 @@
   });
 </code>
       </pre>
-      <pre id="exampletarget5" class="exampletarget"></pre>
-    </section>
-  </div>
-
-</body>
-
+        <pre id="exampletarget5" class="exampletarget"></pre>
+      </section>
+    </div>
+  </body>
 </html>

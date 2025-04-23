@@ -1,15 +1,15 @@
 {
   "name": "@wezz/fetchmanager",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "A script that improves a javascript fetch requests with request throttling, managing querystring parameters and delayed request start",
   "type": "module",
-  "main": "./dist/fetchmanager.umd.cjs",
-  "module": "./dist/fetchmanager.js",
+  "main": "./dist/index.umd.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/fetchmanager.js",
-      "require": "./dist/fetchmanager.umd.cjs"
+      "import": "./dist/index.js",
+      "require": "./dist/index.umd.cjs"
     }
   },
   "files": [
@@ -21,7 +21,9 @@
     "build": "tsc && vite build",
     "prepare": "npm run build",
     "pack": "npm run build",
-    "trypublish": "npm publish --access public || true"
+    "trypublish": "npm publish --access public || true",
+    "eslint": "eslint --ext .ts",
+    "prettier": "prettier --write \"**/*.ts\""
   },
   "repository": {
     "type": "git",
@@ -39,10 +41,14 @@
     "request"
   ],
   "devDependencies": {
-    "@types/node": "^18.14.2",
-    "typescript": "4.9.3",
-    "vite": "^4.1.4",
-    "vite-plugin-dts": "^2.0.2"
+    "@eslint/js": "~9.25.1",
+    "@types/node": "~22.14.1",
+    "eslint": "~9.25.1",
+    "prettier": "~3.5.3",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "~8.31.0",
+    "vite": "~6.3.2",
+    "vite-plugin-dts": "~4.5.3"
   },
   "dependencies": {
     "@wezz/store-manager": "0.1.4",

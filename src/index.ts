@@ -1,1 +1,2 @@
-export { default as FetchManager } from './FetchManager';
+import FetchManager from "./FetchManager";
+export default FetchManager;
