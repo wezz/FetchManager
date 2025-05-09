@@ -1,7 +1,7 @@
 var p = Object.defineProperty;
 var y = (a, e, t) => e in a ? p(a, e, { enumerable: !0, configurable: !0, writable: !0, value: t }) : a[e] = t;
-var i = (a, e, t) => (y(a, typeof e != "symbol" ? e + "" : e, t), t);
-var g = Object.defineProperty, b = (a, e, t) => e in a ? g(a, e, { enumerable: !0, configurable: !0, writable: !0, value: t }) : a[e] = t, w = (a, e, t) => (b(a, typeof e != "symbol" ? e + "" : e, t), t);
+var i = (a, e, t) => y(a, typeof e != "symbol" ? e + "" : e, t);
+var g = Object.defineProperty, b = (a, e, t) => e in a ? g(a, e, { enumerable: !0, configurable: !0, writable: !0, value: t }) : a[e] = t, w = (a, e, t) => (b(a, e + "", t), t);
 class S {
   constructor(e = "cache") {
     w(this, "prefix"), this.prefix = e;
@@ -97,7 +97,10 @@ class v {
     return this.has(e) ? delete this.root[this.storeNamespace][this.storeName][e] : !1;
   }
 }
-const f = new S("fetchmanager"), O = new v("requests", "fetchmanagerstore");
+const f = new S("fetchmanager"), O = new v(
+  "requests",
+  "fetchmanagerstore"
+);
 class $ {
   constructor() {
     i(this, "moduleName", "FetchManager");
@@ -120,8 +123,7 @@ class $ {
     const t = { ...this.defaultOptions, ...e };
     if (!t.url)
       return console.error("Need a url to do a request"), null;
-    const o = this.getKey(t), r = this.getRequestObj(o, t);
-    let s = this.parseFetchOptions(t);
+    const o = this.getKey(t), r = this.getRequestObj(o, t), s = this.parseFetchOptions(t);
     if (t.json && !s.headers) {
       const n = new Headers(s.headers);
       n.has("Content-Type") || (n.append("Content-Type", "application/json"), s.headers = n);
@@ -181,6 +183,7 @@ class $ {
     return this.validResponse(t) ? {
       body: function() {
       },
+      // eslint-disable-line @typescript-eslint/no-empty-function
       bodyUsed: !1,
       headers: {},
       redirected: !1,
@@ -205,7 +208,7 @@ class $ {
   async saveResponseToCache(e) {
     if (e.cache.usecache !== !0 || !e.result)
       return !1;
-    let t = this.validResponse(e.result);
+    const t = this.validResponse(e.result);
     if (this.debug(e.debug, "Storing response in cache ", e.result), !t)
       return console.info(
         "Result was not accepted so it is not saved to cache",
@@ -245,5 +248,5 @@ class $ {
   }
 }
 export {
-  $ as FetchManager
+  $ as default
 };
