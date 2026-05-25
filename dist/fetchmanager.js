@@ -1,7 +1,7 @@
 var p = Object.defineProperty;
 var y = (a, e, t) => e in a ? p(a, e, { enumerable: !0, configurable: !0, writable: !0, value: t }) : a[e] = t;
-var i = (a, e, t) => (y(a, typeof e != "symbol" ? e + "" : e, t), t);
-var g = Object.defineProperty, b = (a, e, t) => e in a ? g(a, e, { enumerable: !0, configurable: !0, writable: !0, value: t }) : a[e] = t, w = (a, e, t) => (b(a, typeof e != "symbol" ? e + "" : e, t), t);
+var i = (a, e, t) => y(a, typeof e != "symbol" ? e + "" : e, t);
+var g = Object.defineProperty, b = (a, e, t) => e in a ? g(a, e, { enumerable: !0, configurable: !0, writable: !0, value: t }) : a[e] = t, w = (a, e, t) => (b(a, e + "", t), t);
 class S {
   constructor(e = "cache") {
     w(this, "prefix"), this.prefix = e;

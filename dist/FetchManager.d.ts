@@ -1,4 +1,4 @@
-import { IFetchManagerOption } from "./FetchManagerTypes";
+import { IFetchManagerOption } from './FetchManagerTypes';
 export default class FetchManager {
     moduleName: string;
     private requestStore;
