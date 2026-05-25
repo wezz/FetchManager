@@ -1,6 +1,6 @@
 {
   "name": "@wezz/fetchmanager",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "A script that improves a javascript fetch requests with request throttling, managing querystring parameters and delayed request start",
   "type": "module",
   "main": "./dist/fetchmanager.umd.cjs",
@@ -26,7 +26,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wezz/FetchManager"
+    "url": "git+https://github.com/wezz/FetchManager.git"
   },
   "author": "Wezz Balk <github@wezz.se> (https://github.com/wezz)",
   "license": "MIT",
